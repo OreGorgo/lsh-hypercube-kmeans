@@ -151,20 +151,3 @@ void hamming(string str, int i, int changesLeft, vector<unsigned int>* vertices,
     hamming(str, i-1, changesLeft, vertices,limit);
 }
 
-
-//
-//static std::vector<char> ReadAllBytes(string filename)
-//{
-//    ifstream ifs(filename.c_str(), ios::binary|ios::ate);
-//    ifstream::pos_type pos = ifs.tellg();
-//
-//    std::vector<char>  result(pos);
-//
-//    ifs.seekg(0, ios::beg);
-//    ifs.read(&result[0], pos);
-//
-//    return result;
-//}
-
-
-
