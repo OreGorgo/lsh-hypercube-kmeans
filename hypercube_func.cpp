@@ -70,73 +70,21 @@ vector <neighbor> knn_hypercube(hypercube_HT* ht,image query, int k,int limit,in
 			{
 			    dist = l1_distance(query, *image_it); //*it is bucket->at(j)
 			
-				if(counter < k)
-				{
-					neighbor_it = result.begin();
-					
-					//valto mesa
-					for(int n=0;n<result.size();n++)
-			    	{
-			    		if(result.at(n).distance > dist)
-			    		{
-			    			temp.distance = dist;
-			    			temp.p = *image_it; 
-			    			
-			    			
-			    			result.insert(neighbor_it,temp); //save the neighbor in result as well as the distance
-			    						    			
-			    			counter++;			    			
-							flag = 1;
-			    			break;
-						}
-						std::advance(neighbor_it, 1);
-					}
-					
-					if(!flag)
-					{
 						temp.distance = dist;
-			    		temp.p = *image_it; 
-			    			
-			    		result.push_back(temp); //save the neighbor in result as well as the distance
-			    					    					    		
-			    		counter++;
-					}
-					
-					flag=0;
-					
-				} //end if
-				
-			    else if(dist < max_dist)
-			    {
-			    	neighbor_it = result.begin();
-			    	
-			    	for(int n=0;n<k;n++)
-			    	{
-			    		if(result.at(n).distance > dist)
-			    		{
-			    			temp.distance = dist;
 			    			temp.p = *image_it; 
 			    			
-			    			result.insert(neighbor_it,temp); //save the neighbor in result as well as the distance
-					    			
-			    			counter++;
 			    			
-			    			max_dist = result.at(k-1).distance;
-			    			break;
-						}
-						
-						std::advance(neighbor_it,1);
-						
-					}
-										
-					
-				}//end else if	
+			    			result.push_back(temp); //save the neighbor in result as well as the distance
 				
 				std::advance(image_it, 1); //get next list item
 				
 				
 				if(++check >= limit)
+				{
+					std::sort(result.begin(), result.end(), my_cmp);
+    					result.erase( unique( result.begin(), result.end(),cmp ), result.end() );	
 					return result;
+				}
 				
 			
 			}//end for bucket
@@ -145,14 +93,18 @@ vector <neighbor> knn_hypercube(hypercube_HT* ht,image query, int k,int limit,in
 			
 			//probes counter
 			if(++probes_count >= probes)
+			{	
+				std::sort(result.begin(), result.end(), my_cmp);
+    				result.erase( unique( result.begin(), result.end(),cmp ), result.end() );
 				return result;
-		
+			}
 		} //end while hamming	
 		
 	} //end for each hamming
 	
-	
-    return result;
+	std::sort(result.begin(), result.end(), my_cmp);
+    	result.erase( unique( result.begin(), result.end(),cmp ), result.end() );	
+    	return result;
 }
 
 

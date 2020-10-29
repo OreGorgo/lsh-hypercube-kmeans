@@ -1,4 +1,4 @@
-CC=g++ -std=c++11
+CC=g++ -std=c++11 -g -O3
 CFLAGS=-Wall 
 
 all: util.o hash.o lsh_func.o hypercube_func.o kmeans_func.o lsh_main.o hypercube_main.o kmeans_main.o lsh cube kmeans

@@ -126,14 +126,7 @@ int main(int argc,char **argv)
 
     //Data starts here
     //fp.seekg(16,fp.beg);
-
-
-    cout << images <<endl;
-    cout << rows <<endl;
-    cout << cols <<endl;
-
-
-	images = 1000;
+    
 
     image* arr = new image[images];
     unsigned char temp;
@@ -234,7 +227,7 @@ int main(int argc,char **argv)
 	} 
     
 	//int w = average_NN(arr, 500);
-    int w = 10000;
+    int w = 40000;
     
     int threshold = images/500;
 
@@ -287,11 +280,10 @@ int main(int argc,char **argv)
         if(i<sil.size()-1)
             output_fp<<" , ";
     }
-    output_fp<<" ]";
+    output_fp<<" ]"<<endl;
 
 
 
-    complete=true;
     if(complete)
     {
         for(int i=0;i<clusters.size();i++)
@@ -306,10 +298,6 @@ int main(int argc,char **argv)
             output_fp<<" }"<<endl;
         }
     }
-    //vector<cluster> clusters = kmeans_lsh(arr, size, images, K, L, lsh_k, w, threshold);
-	//vector<cluster> clusters = kmeans_hypercube(arr, size, images, K, cube_k, cube_M, probes, w, lsh_k, threshold);
-	
-	
 
 
 	delete[] arr;

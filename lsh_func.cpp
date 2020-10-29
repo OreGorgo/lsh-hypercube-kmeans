@@ -22,7 +22,6 @@
 
 using namespace std;
 
-
 vector <neighbor> knn(hashtable** ht,image query, int k, int L)
 {
 	
@@ -37,9 +36,7 @@ vector <neighbor> knn(hashtable** ht,image query, int k, int L)
 	list <image>* bucket;
 	
 	// Create iterator pointing to first element
-    std::list<image>::iterator image_it;
-    
-    // Advance the iterator by 2 positions,
+    	std::list<image>::iterator image_it;
     
 	max_dist = INT_MAX; //?
 	unsigned int buckets = ht[0]->get_bucket_no();
@@ -59,103 +56,37 @@ vector <neighbor> knn(hashtable** ht,image query, int k, int L)
         
         for(int j=0;j<size;j++) //check every element in the bucket
         {
-        	//if(query.g != image_it->g)
-        	//	continue;
+        	if(query.g != image_it->g)
+        		continue;
         		
-            dist = l1_distance(query, *image_it); //*it is bucket->at(j)
-            
-
-			if(counter < k)
-			{
-				neighbor_it = result.begin();
+            	dist = l1_distance(query, *image_it); //*it is bucket->at(j)
+           
+		temp.distance = dist;
+		temp.p = *image_it; 
+		
+		
+		result.push_back(temp); //save the neighbor in result as well as the distance
+		
 				
-				//valto mesa
-				for(int n=0;n<result.size();n++)
-            	{
-            		if(result.at(n).p.id == image_it->id)
-            		{
-            			break;
-					}
-            		
-            		if(result.at(n).distance > dist)
-            		{
-            			temp.distance = dist;
-            			temp.p = *image_it; 
-            			
-            			//cout <<temp.p.id <<image_it->id<<endl;
-            			
-            			result.insert(neighbor_it,temp); //save the neighbor in result as well as the distance
-            			counter++;
-            			
-            			//max_dist = result.at(result.size()-1).distance;
-            			flag = 1;
-            			break;
-					}
-					std::advance(neighbor_it, 1);
-				}
-				
-				if(!flag)
-				{
-					temp.distance = dist;
-            		temp.p = *image_it; 
-            			
-            		result.push_back(temp); //save the neighbor in result as well as the distance
-            		//max_dist = dist;
-            		
-            		counter++;
-            		
-				}
-				
-				flag=0;
-				
-				//if(result.size() > limit) //stop if you have too many collisions OPTIONAL!!
-        		//	return result;
-			}
+		if(result.size() > limit) //stop if you have too many collisions OPTIONAL!!
+        	{
+        		std::sort(result.begin(), result.end(), my_cmp);
+    			result.erase( unique( result.begin(), result.end(),cmp ), result.end() );
+    			return result;
+    		}
 			
-            else if(dist < max_dist)
-            {
-            	neighbor_it = result.begin();
-            	
-            	for(int n=0;n<k;n++)
-            	{	
-            	
-            		if(result.at(n).p.id == image_it->id)
-            		{
-            			break;
-					}
-					
-					if(result.at(n).distance > dist)
-            		{
-            			temp.distance = dist;
-            			temp.p = *image_it; 
-            			
-            			result.insert(neighbor_it,temp); //save the neighbor in result as well as the distance
-            			counter++;
-            			
-            			max_dist = result.at(k-1).distance;
-            			break;
-					}
-					
-					std::advance(neighbor_it,1);
-					
-				}
-				
-				// counter++; //not needed here
-				
-				//if(result.size() > limit) //stop if you have too many collisions OPTIONAL!!
-        		//	return result;
-				
-			}	
 			
-			std::advance(image_it, 1); //get next list item
+		std::advance(image_it, 1); //get next list item
 			
         }
 
     }
+    
+    std::sort(result.begin(), result.end(), my_cmp);
+    result.erase( unique( result.begin(), result.end(),cmp ), result.end() );
 
     return result;
 }
-
 
 vector <unsigned int> range_search(hashtable** ht,image query, double r, int L, int c)
 {

@@ -142,14 +142,6 @@ int main(int argc,char **argv)
     fp.seekg(16,fp.beg);
 
 
-    cout << images <<endl;
-    cout << rows <<endl;
-    cout << cols <<endl;
-
-
-	images=10000;
-
-
     image* arr = new image[images];
     unsigned char temp;
 
@@ -175,7 +167,6 @@ int main(int argc,char **argv)
     //int w = average_NN(arr, 500);
     int w = 40000;
 
-    cout<< w<< endl;
 
 	int d;
 
@@ -205,29 +196,39 @@ int main(int argc,char **argv)
     	hyp->insert_image(arr[i]);	
     }
 
-    ifstream query_fp(data_path.c_str(),  ios::in | ios::binary );
+    ifstream query_fp(query_path.c_str(),  ios::in | ios::binary );
     if (!query_fp.is_open())
     {
         cout << "Unable to open file";
         return 1;
     }
 
-    image* query_arr = new image[images];
-
-
-    for(int j=0;j<images;j++)
+   	vector <image> query_arr;
+	image temp_image;
+	int query_images=0;
+	int aa;
+	
+	//get metadata
+    query_fp.seekg(4,query_fp.beg);
+    query_fp.read ((char*)&aa,4);
+    query_images = bswap_32(aa);
+    query_fp.read((char*)&aa,4);
+    query_fp.read((char*)&aa,4);
+    for(int j=0;j<query_images;j++)
     {
+	query_arr.push_back(temp_image);
         query_arr[j].id = j;
         query_arr[j].cluster = -1;
         query_arr[j].old_cluster = -1;
         query_arr[j].g = 0;
+
 
         for(int i=0; i<size; i++)
         {
             query_fp >> temp;
             query_arr[j].pixels.push_back(temp);
         }
-
+                
     }
 
 
@@ -235,24 +236,25 @@ int main(int argc,char **argv)
     vector <unsigned int> brute_result;
     vector <unsigned int> range_result;
 
-    k=7;
 
 
     double thyp=0,ttrue=0;
 
     ofstream output_fp;
     output_fp.open (output_file);
+    
+    //query_images=10;
 
 
-    for(int i=0;i<10/*query_mages*/;i++)
+    for(int i=0;i<query_images;i++)
     {
         auto start = high_resolution_clock::now();
 
-        hyp_result = knn_hypercube(hyp, query_arr[i], k, limit,probes);
+        hyp_result = knn_hypercube(hyp, query_arr[i], N, limit,probes);
 
         auto stop = high_resolution_clock::now();
         auto duration = duration_cast<microseconds>(stop - start);
-        thyp += (double)duration.count()/1000000.0;
+        thyp = (double)duration.count()/1000000.0;
 
         start = high_resolution_clock::now();
 
@@ -260,7 +262,7 @@ int main(int argc,char **argv)
 
         stop = high_resolution_clock::now();
         duration = duration_cast<microseconds>(stop - start);
-        ttrue += (double)duration.count()/1000000.0;
+        ttrue = (double)duration.count()/1000000.0;
 
 
         output_fp<<"Query: "<<i+1<<endl<<endl;

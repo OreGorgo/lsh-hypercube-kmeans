@@ -35,6 +35,8 @@ typedef struct{
 	
 }neighbor;
 
+bool my_cmp(const neighbor & a, const neighbor & b);
+bool cmp(const neighbor & a, const neighbor & b);
 
 unsigned int l1_distance(image x, image y);
 

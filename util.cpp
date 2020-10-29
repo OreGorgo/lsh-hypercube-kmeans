@@ -20,6 +20,18 @@
 
 using namespace std;
 
+bool my_cmp(const neighbor & a, const neighbor & b)
+{
+    // smallest comes first
+    return a.distance < b.distance;
+}
+
+bool cmp(const neighbor & a, const neighbor & b)
+{
+    // smallest comes first
+    return a.distance == b.distance;
+}
+
 
 unsigned int l1_distance(image x, image y)
 {
@@ -31,11 +43,7 @@ unsigned int l1_distance(image x, image y)
         sum += abs((int) (x.pixels[i] - y.pixels[i]) );
     }
 
-    //return sum / size;
-
 	return sum;
-	
-    //diairw me size edw h alliws afhnw th diairesh me to 784 apo katw
 }
 
 
@@ -134,7 +142,7 @@ void hamming(string str, int i, int changesLeft, vector<unsigned int>* vertices,
         return;
     }
     
-    if (i < limit) return;
+    if (i < (int)limit) return;
     // flip current bit
     str[i] = str[i] == '0' ? '1' : '0';
     hamming(str, i-1, changesLeft-1, vertices,limit);
